@@ -1,0 +1,1 @@
+print("Desculpa vou ter que pular esse capitulo.")
