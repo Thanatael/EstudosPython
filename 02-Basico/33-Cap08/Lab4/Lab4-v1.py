@@ -84,13 +84,13 @@ class Hangman:
      def __init__(self, palavra):
           self.palavra = palavra
           self.letras_erradas = []
-          self.letras_escohlidas = []
+          self.letras_escolhidas = []
 
 	# Método para adivinhar a letra
      def guess(self, letra):
 
-          if letra in self.palavra and letra not in self.letras_escohlidas:
-               self.letras_escohlidas.append(letra)
+          if letra in self.palavra and letra not in self.letras_escolhidas:
+               self.letras_escolhidas.append(letra)
 
           elif letra not in self.palavra and letra not in self.letras_erradas:
                self.letras_erradas.append(letra)
@@ -100,10 +100,93 @@ class Hangman:
           return True
 	
 	# Método para verificar se o jogo terminou
-		
+     def hangman_over(self):
+
+          return self.hangman_won() or (len(self.letras_erradas) == 6)
+                                        		
 	# Método para verificar se o jogador venceu
+     def hangman_won(self):
+
+          if '_' not in self.hide_palavra():
+               return True
+          return False
 		
 	# Método para não mostrar a letra no board
+     def hide_palavra(self):
+
+          rtn  = ''
+
+          for letra in self.palavra:
+               if letra not in self.letras_escolhidas:
+                    rtn += '_'
+               else:
+                    rtn += letra
+          return rtn
 		
 	# Método para checar o status do game e imprimir o board na tela
-     print("oi")
+     def print_game_status(self):
+
+          print(board[len(self.letras_erradas)])
+
+          print('\nPalavras: ' + self.hide_palavra())
+                
+          print('\nLetras erradas: ',)
+
+          for letra in self.letras_erradas:
+               print(letra,)
+
+          print()
+
+          print('Letras corretas: ',)
+
+          for letra in self.letras_escolhidas:
+               print(letra,)
+          
+          print()
+
+#Método para ler a palavra de forma aleatoria do banco de dados
+def rand_palavra():
+
+     #Lista de palavra para o jogo
+     palavras = ['python', 'java', 'c++', 'ruby', 'javascript', 'swift', 'kotlin', 'go', 'assembly']
+
+     #Escolhe uma palavra aleatoriamente
+     palavra = random.choice(palavras)
+
+     return palavra
+
+# Método Main - Execução do programa
+def main():
+
+     limpa_tela()
+
+     #Cria o objeto e seleciona uma palavra radomicamente
+     game = Hangman(rand_palavra())
+
+     #Enquanto o jogo nãotiver terminado, print do status uma letra e faz leitura do caracter
+     while not game.hangman_over():
+
+          # Status do game
+          game.print_game_status()
+
+          # Recebe input do terminal
+          user_input = input('\nDigite uma letra: ')
+
+          # Verifica se a letra digitada faz parte da palavra
+          game.guess(user_input)
+
+     # Verifica o status do jogo
+     game.print_game_status()
+
+     # De acordo com o status, imprime menssagem na tela para o usuario
+     if game.hangman_won():
+          print('\nParabéns, você venceu!!')
+     else:
+          print('\nGame over! Você perdeu.')
+          print('\nA palavra era: ', game.palavra)
+
+     print('\nFoi bom jogar com você" Agora vá estudar!\n')
+
+# Executa o programa
+if __name__ == '__main__':
+     main()
